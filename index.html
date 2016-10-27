@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Proyecto</title>
+	</head>
+	<body onload="startDB(); ">
+	<h1>Esta es una prueba de workers!</h1>
+		<span id="output"></span><br>
+		<span id="date"></span><br>
+		<span id="coordenadas"></span><br>
+		<p id="Resultado"></p>
+        <button type="button" onclick="add();">Guardar</button>
+                <hr>
+        <div id="elements">
+            <button type="button" onclick="loadAllByNombre();">Order by name</button>
+            <table>
+                <caption>Pacientes</caption>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Pulso cardíaco</th>
+                        <th>Latitud</th>
+                        <th>Longitud</th>
+                        <th>Fecha</th>
+
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody id="elementsList">
+                    <tr>
+                        <td colspan="3">Not elements to show</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </body>
+</html>
