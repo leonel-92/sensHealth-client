@@ -191,6 +191,75 @@
         }
     }
 
+                        function loadAll() {
+                var active = dataBase.result;
+                var data = active.transaction(["paciente"], "readonly");
+                var object = data.objectStore("paciente");
+                var work = new Worker('worker.js');
+                 elements = [];
+
+                object.openCursor().onsuccess = function (e) {
+
+                    var result = e.target.result;
+
+                    if (result === null) {
+                        console.log('entre al if')
+                        return;
+                    }
+                    indice.push(parseInt(result.key));
+                    //inicio[indice.length-1] = parseInt(result.key);
+                    inicio.push(result.key);
+                    console.log('inicio: '+inicio[0]+'  fin: '+inicio);
+                    console.log('value: '+parseInt(result.key));
+                    fin = parseInt(result.key);
+                    elements.push(result.value);
+                    result.continue();
+
+                };
+
+                data.oncomplete = function () {
+
+                    var outerHTML = '';
+
+                    for (var key in elements) {
+
+                        var datos = JSON.stringify({cliente: elements[key].nombre,
+											  frecuencia:    elements[key].pulso,
+											  posicion:{lat:   elements[key].latitud,
+                                                        lon:   elements[key].longitud},
+                                              fechalocal:    elements[key].fecha
+			             });
+
+                        work.postMessage(datos);
+console.log('Dato[ '+key+' ]: '+' '+elements[key].nombre+' '+elements[key].pulso+' '+elements[key].latitud+
+           ' '+elements[key].longitud+' '+elements[key].fecha);
+                        outerHTML += '\n\
+                        <tr>\n\
+                            <td>' + elements[key].nombre + '</td>\n\
+                            <td>' + elements[key].pulso + '</td>\n\
+                            <td>' + elements[key].latitud + '</td>\n\
+                            <td>' + elements[key].longitud + '</td>\n\
+                            <td>' + elements[key].fecha + '</td>\n\
+                            </tr>';
+
+
+
+                    }
+
+                    work.addEventListener('message', function (eve) {
+
+			},false);
+
+
+            console.log('datos: '+datos)
+
+
+                    document.querySelector("#elementsList").innerHTML = outerHTML;
+                };
+
+
+            }
+
 
         </script>
         </body>
