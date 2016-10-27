@@ -1,0 +1,1 @@
+sensHealth-client is for all the users of the system
