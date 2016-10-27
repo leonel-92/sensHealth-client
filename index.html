@@ -95,6 +95,75 @@
             		break;
     		}
 		}
+
+        //Genera la información en un JSON para poder guardarlo en indexedDB
+		function enviaDato() {
+
+			//Prepara fecha
+            console.log('Envie datos!!!')
+			var hoy = new Date();
+			var dd = hoy.getDate();
+			var mm = hoy.getMonth()+1; //hoy es 0!
+			var yyyy = hoy.getFullYear();
+			var hh = hoy.getHours();
+			var min = hoy.getMinutes();
+			var sec = hoy.getSeconds();
+
+			if(dd<10) {
+	    		dd='0'+dd
+			}
+
+			if(mm<10) {
+
+	    		mm='0'+mm
+			}
+			hoy = mm+'/'+dd+'/'+yyyy+" "+hh+":"+min+":"+sec;
+			document.getElementById("date").innerHTML=hoy;
+            fech=hoy;
+
+            pacienteData =
+                { indice: indexdb,
+                 name: nombre,
+                 pulso: pulso,
+                 latitud: lat,
+                 longitud: lon,
+                 fecha: fech
+                }
+
+
+		}
+
+    //Creación y llamada a base de datos de IndexedDB
+    function startDB(){
+    dataBase = indexedDB.open("sensHealth",1);
+
+    dataBase.onupgradeneeded = function(event){
+    active = dataBase.result;
+    db =dataBase.result;
+    console.log('active: '+active);
+    object = active.createObjectStore("paciente",{keypath:'id',autoIncrement:true});
+
+    object.createIndex("by_nombre", "nombre",   { unique: false });
+    object.createIndex("by_pulso", "pulso",     { unique: false });
+    object.createIndex("by_latitud", "latitud", { unique: false });
+    object.createIndex("by_longitud", "longitud", { unique: false });
+    object.createIndex("by_fecha", "fecha",     { unique: false });
+
+        };
+
+    dataBase.onsuccess = function(event){
+        console.log('Base de datos cargada correctamente');
+        loadAll();
+
+    };
+
+    dataBase.onError = function(event){
+        console.log('Error al cargar la base de datos');
+    };
+
+}
+
+
         </script>
         </body>
 </html>
