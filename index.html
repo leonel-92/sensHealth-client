@@ -163,6 +163,34 @@
 
 }
 
+    function add(){
+
+   // console.log('add(): '+JSON.stringify(pacienteData));
+
+     active = dataBase.result;
+    var data = active.transaction(["paciente"],"readwrite");
+    var object = data.objectStore("paciente");
+
+    var request = object.put({
+        id: object.id,
+        nombre: pacienteData.name,
+        pulso: pacienteData.pulso,
+        latitud: pacienteData.latitud,
+        longitud: pacienteData.longitud,
+        fecha: pacienteData.fecha
+    });
+
+        request.onerror = function(event){
+            console.log(request.error.name + '\n\n' + request.error.message);
+        }
+
+        request.oncomplete = function(event){
+
+            console.log('Objeto agregado correctamente');
+            loadAll();
+        }
+    }
+
 
         </script>
         </body>
