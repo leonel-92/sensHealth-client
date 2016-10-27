@@ -34,5 +34,67 @@
                 </tbody>
             </table>
         </div>
+        <script type="text/javascript">
+		var nombre="Leonel";
+		var x = document.getElementById("coordenadas");
+		var lat , lon;
+		var pulse, pulso,resp,num, respon;
+		var worker_pulso, worker;
+		var latitud=0, longitud=0;
+		var indexdb="indice";
+        var pacienteData;
+        var fech;
+        var datos;
+        var elements = [],indice =[];
+        var inicio = new Array();
+        var fin;
+
+        var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+
+
+        //Llamada a workerPulso para extraer la frecuencia
+				worker_pulso = new Worker ('workerPulso.js');
+				worker_pulso.onmessage = function(event){
+				 pulse = event.data;
+				console.log('respuesta pulso '+pulse);
+				document.getElementById("Resultado").innerHTML=pulse;
+				console.log('pulso '+pulse)
+				pulso = pulse;
+                    obtenerDatos();
+
+			}
+        //Obtiene datos de geolocalización
+		function obtenerDatos(){
+		    if (navigator.geolocation) {
+		        navigator.geolocation.getCurrentPosition(showPosition);
+		    } else {
+		        x.innerHTML = "Geolocation is not supported by this browser.";
+		    }
+		}
+        //Obtiene las coordenadas de latitud y longitud
+		function showPosition(position) {
+			lat = position.coords.latitude;
+			lon = position.coords.longitude;
+		    x.innerHTML = "Latitud: " + lat + "<br>Longitud: " + lon;
+			enviaDato();
+		}
+        //Muestra los errores al obtener la localización
+		function showError(error) {
+    		switch(error.code) {
+        		case error.PERMISSION_DENIED:
+            		x.innerHTML = "User denied the request for Geolocation."
+            		break;
+        		case error.POSITION_UNAVAILABLE:
+            		x.innerHTML = "Location information is unavailable."
+            		break;
+        		case error.TIMEOUT:
+            		x.innerHTML = "The request to get user location timed out."
+            		break;
+        		case error.UNKNOWN_ERROR:
+            		x.innerHTML = "An unknown error occurred."
+            		break;
+    		}
+		}
+        </script>
         </body>
 </html>
