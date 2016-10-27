@@ -260,6 +260,46 @@ console.log('Dato[ '+key+' ]: '+' '+elements[key].nombre+' '+elements[key].pulso
 
             }
 
+                        function deleteData() {
+  // open a read/write db transaction, ready for deleting the data
+                console.log('elements: '+elements.length);
+
+  var transaction = active.transaction(["paciente"], "readwrite");
+
+
+
+
+  transaction.onerror = function(event) {
+      console.log('Transaction not opened due to error: ' + transaction.error)
+  };
+
+  // create an object store on the transaction
+  var objectStore = transaction.objectStore("paciente");
+                console.log('inicio: '+inicio[0]+' elements: '+elements.length);
+
+    /*for (var i = inicio[0]-2; i <fin; i++) {
+
+    }*/
+            for(var i in elements){
+                 console.log('inicio    '+i+'  fin:           '+elements.length)
+               var objectStoreRequest = objectStore.delete(inicio[i]);
+                      objectStoreRequest.onsuccess = function(event) {
+                    // report the success of our delete operation
+                      console.log('REcord deleted')
+  };
+            }
+
+  // Delete the specified record out of the object store
+      // report on the success of opening the transaction
+  transaction.oncomplete = function(event) {
+
+      console.log('Transaction completed: database modification finished.')
+  };
+
+
+
+            }
+
 
         </script>
         </body>
