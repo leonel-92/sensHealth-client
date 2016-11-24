@@ -61,7 +61,6 @@
 				 pulse = event.data;
 
 				document.getElementById("Resultado").innerHTML=pulse;
-				console.log('pulso '+pulse)
 
 				pulso = pulse;
                     obtenerDatos();
@@ -149,7 +148,6 @@
     dataBase.onupgradeneeded = function(event){
     active = dataBase.result;
     db =dataBase.result;
-  //  console.log('active: '+active);
     object = active.createObjectStore("paciente",{keypath:'id',autoIncrement:true});
 
     object.createIndex("by_nombre", "nombre",   { unique: false });
@@ -210,15 +208,11 @@
                  elements = [];
                  inicio = new Array();
 
-
-
-
                 object.openCursor().onsuccess = function (e) {
 
                     var result = e.target.result;
 
                     if (result === null) {
-                 //       console.log('entre al if')
                         return;
                     }
                     indice.push(parseInt(result.key));
@@ -230,7 +224,6 @@
                    // console.log('value: '+parseInt(result.key));
                     elements.push(result.value);
                     result.continue();
-                    console.log('inicio indice: '+inicio[0]+'fin: '+fin);
 
                 };
 
@@ -248,16 +241,6 @@
                                               fechalocal:    elements[key].fecha
 			             });
 
-
-
-
-
-
-
-
-
-/*console.log('Dato[ '+key+' ]: '+' '+elements[key].nombre+' '+elements[key].pulso+' '+elements[key].latitud+
-           ' '+elements[key].longitud+' '+elements[key].fecha);*/
                         outerHTML += '\n\
                         <tr>\n\
                             <td>' + elements[key].nombre + '</td>\n\
@@ -267,107 +250,43 @@
                             <td>' + elements[key].fecha + '</td>\n\
                             </tr>';
 
-
-
                     }
 
                                 enviaDatosServidor();
-
-
-
-
-
-
-
-
                     }
-
-/*
-                    var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-                   // console.log('status de peticion: '+xmlhttp.readyState);
-xmlhttp.open("POST", "http://localhost:8080/posiciones");
-//console.log('status de peticion: '+xmlhttp.readyState);
-xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-xmlhttp.onerror = function(e){
-    console.log('Error : '+e.target.status);
-    var error = e.target.status
-
-};
-           //         console.log('status de peticion: '+xmlhttp.readyState);
-  xmlhttp.onload = function () {
-    //console.log('DONE', xmlhttp.readyState); // readyState will be 4
-};
-       //console.log('status de peticion: '+xmlhttp.readyState);
-
-*/
-
                     document.querySelector("#elementsList").innerHTML = outerHTML;
 
                 };
-
-
-
                 }
-
-
                 work.onmessage = function(event){
                               errorServidor = event.data;
                             errorSrv = errorServidor;
-                            console.log('ErrorServidor: '+errorSrv);
 
                         }
 
-
-
-
-
-
-
 function deleteData() {
-  // open a read/write db transaction, ready for deleting the data
-                console.log('elements: '+elements.length);
 
   var transaction = active.transaction(["paciente"], "readwrite");
-
-
-
-
   transaction.onerror = function(event) {
       console.log('Transaction not opened due to error: ' + transaction.error)
   };
 
-  // create an object store on the transaction
   var objectStore = transaction.objectStore("paciente");
-        //        console.log('inicio: '+inicio[0]+' elements: '+elements.length);
 
-    /*for (var i = inicio[0]-2; i <fin; i++) {
-
-    }*/
             for(var i in elements){
-                 console.log('inicio    '+i+'  fin:           '+elements.length)
                var objectStoreRequest = objectStore.delete(inicio[i]);
                       objectStoreRequest.onsuccess = function(event) {
-                    // report the success of our delete operation
                       console.log('REcord deleted')
   };
             }
-
-  // Delete the specified record out of the object store
-      // report on the success of opening the transaction
   transaction.oncomplete = function(event) {
 
       console.log('Transaction completed: database modification finished.')
   };
 
-
-
             }
 
-
-
-
-                            //envia los datos al servidor si no hay error en la conexión al servidor
+                //envia los datos al servidor si no hay error en la conexión al servidor
                 function enviaDatosServidor() {
                 var active = dataBase.result;
                 var data = active.transaction(["paciente"], "readonly");
@@ -380,14 +299,10 @@ function deleteData() {
                     var result = e.target.result;
 
                     if (result === null) {
-                 //       console.log('entre al if')
                         return;
                     }
                     indice.push(parseInt(result.key));
-                    //inicio[indice.length-1] = parseInt(result.key);
                     inicio.push(result.key);
-           //         console.log('inicio: '+inicio[0]+'  fin: '+inicio);
-                    console.log('value: '+parseInt(result.key));
                     fin = parseInt(result.key);
                     elements.push(result.value);
                     result.continue();
@@ -409,9 +324,6 @@ function deleteData() {
 
                             work.postMessage(datos);
 
-
-/*console.log('Dato[ '+key+' ]: '+' '+elements[key].nombre+' '+elements[key].pulso+' '+elements[key].latitud+
-           ' '+elements[key].longitud+' '+elements[key].fecha);*/
                         outerHTML += '\n\
                         <tr>\n\
                             <td>' + elements[key].nombre + '</td>\n\
@@ -425,27 +337,7 @@ function deleteData() {
 
                     }
 
-
-
-
-
-            console.log('datos: '+datos)
-            console.log('error  == '+errorSrv);
-
                     document.querySelector("#elementsList").innerHTML = outerHTML;
-
-
-                    /*Aqui esta el error, (Sacar el deleteData() del 'onComplete()')
-
-                    errorServidor debe ser undefinided de nuevo
-
-                    */
-
-
-                    /**/
-                    /**/
-                    //////////////////////////////////////////////////////////////////////////
-
                     if(errorServidor==4){
 
                     deleteData();
